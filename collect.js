@@ -16,12 +16,13 @@ const collectors = {
 
 try {
     let all = [];
+    let nrFiles = 0;
 
     const basePath = process.cwd();
 
     const dirlist = await fsPromises.opendir('.', {recursive: true});
     for await (const dirent of dirlist) {
-        if (!dirent.isDirectory() && dirent.isFile()) {
+        if (!dirent.isDirectory() && dirent.isFile() && ++nrFiles) {
             const collected = await processFile(dirent, basePath);
             if (collected && collected.length) all = all.concat(collected);
         }
@@ -29,7 +30,12 @@ try {
 
     console.log(all);
 
-    console.log('Submitting '+all.length+' translation keys..');
+    if (all.length) {
+        console.log('Submitting '+all.length+' translation keys..');
+    }
+    else {
+        console.log('Found no translatio keys in '+nrFiles+' files');
+    }
 }
 catch (error) {
     core.setFailed(error.message);
