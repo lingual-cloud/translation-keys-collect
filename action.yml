@@ -14,7 +14,7 @@ inputs:
 
 runs:
   using: 'node20'
-  main: 'collect.js'
+  main: 'index.js'
 
 branding:
   icon: upload-cloud
