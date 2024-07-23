@@ -1,0 +1,21 @@
+name: Lingual Translation Keys Collect
+description: 'Collect all translation keys from your source code'
+
+inputs:
+  source-id:
+    description: Source id
+    required: true
+  include-files:
+    description: Files/dirs/extensions to scan
+    required: false
+  exclude-files:
+    description: Files/dirs/extensions to exclude
+    required: false
+
+runs:
+  using: 'node20'
+  main: 'collect.js'
+
+branding:
+  icon: upload-cloud
+  color: blue
