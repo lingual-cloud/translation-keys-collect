@@ -20,7 +20,7 @@ jobs:
     - uses: lingual-cloud/translation-keys-collect@v1
       with:
         # Lingual project source id
-        api-token: ${{ secrets.lingual_source_id }}
+        source-id: ${{ secrets.lingual_source_id }}
 ```
 
 ## License
