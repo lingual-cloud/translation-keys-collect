@@ -1,6 +1,6 @@
 {
   "name": "github-translation-keys-collect",
-  "version": "1.0",
+  "version": "1.0.0",
   "main": "collect.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
