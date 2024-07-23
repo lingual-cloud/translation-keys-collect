@@ -8,9 +8,9 @@ name: Lingual Collect Translation Keys
 
 on:
   push:
-    # Only run workflow for pushes to specific branches
+    # run workflow on pushes to specific branch(es)
     branches:
-      - master
+      - release
 
 jobs:
   upload:
@@ -19,8 +19,8 @@ jobs:
     - uses: actions/checkout@v3
     - uses: lingual-cloud/translation-keys-collect@v1
       with:
-        # Lingual source id
-        api-token: ${{ secrets.lingual_source_id }}
+        # Lingual project source id
+        api-token: ${{ secrets.lingual_my_source_id }}
 ```
 
 ## License
