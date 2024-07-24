@@ -25,4 +25,4 @@ jobs:
 
 ## License
 
-Free to use with your Lingual account.
+Free to use with your <a href="https://lingual.cloud" target="_blank">Lingual account</a>.
