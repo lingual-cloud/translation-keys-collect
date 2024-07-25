@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+const httpx = require('@actions/http-client');
 const collect = require('./collect');
 
-collect(core, github);
+collect(core, httpx);

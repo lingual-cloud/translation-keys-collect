@@ -5,7 +5,7 @@ const htmlCollector = require('./collectors/html');
 const phpCollector = require('./collectors/php');
 const laravelCollector = require('./collectors/laravel');
 
-module.exports = async (core, github) => {
+module.exports = async (core, httpx) => {
 
 const collectors = {
     js: jsCollector,
@@ -15,10 +15,12 @@ const collectors = {
 }
 
 try {
-    let all = [];
-    let nrFiles = 0;
+    const sourceId = 'f83h40hg3589/my-test-source-id'; // core.getInput('source-id', {required: true});
 
     const basePath = process.cwd();
+
+    let all = [];
+    let nrFiles = 0;
 
     const dirlist = await fsPromises.opendir('.', {recursive: true});
     for await (const dirent of dirlist) {
@@ -32,6 +34,7 @@ try {
 
     if (all.length) {
         console.log('Submitting '+all.length+' translation keys..');
+        submitCollected(all, sourceId);
     }
     else {
         console.log('Found no translatio keys in '+nrFiles+' files');
@@ -46,10 +49,7 @@ function processFile(dirent, basePath) {
     if (dotIdx === -1) return null;
 
     const ext = dirent.name.substr(dotIdx).toLowerCase();
-    if (ext === '.ts') {
-        return processSourceFile(dirent, [collectors.js], basePath);
-    }
-    else if (ext === '.js') {
+    if (ext === '.ts' || ext === '.js' || ext === '.vue') {
         return processSourceFile(dirent, [collectors.js], basePath);
     }
     else if (ext === '.php') {
@@ -80,6 +80,42 @@ function referencePath(filePath, basePath) {
         refPath = refPath.replace(path.sep, '');
     }
     return refPath;
+}
+
+function submitCollected(all, sourceId) {
+    let allByKey = {};
+    for (const collected of all) {
+        if (!allByKey[collected.key]) {
+            allByKey[collected.key] = {
+                origin: {type: 'source'},
+                text: collected.key,
+                refs: [{filePath: collected.ref, via: collected.via}],
+            };
+        }
+        else {
+            allByKey[collected.key].refs.push({filePath: collected.ref, via: collected.via});
+        }
+        if (collected.locale) {
+            allByKey[collected.key].locale = collected.locale;
+        }
+    }
+
+    const postData = JSON.stringify({
+        source: {id: sourceId},
+        texts: Object.values(allByKey),
+    });
+
+    const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect');
+    http.post('https://voca.lingual.cloud/texts', postData).then((res) => {
+        if (res.message.statusCode === httpx.HttpCodes.OK) {
+            console.log('Submitted successfully');
+        }
+        else {
+            console.log('Submit failed: '+res.message.statusCode);
+        }
+    }).catch((err) => {
+        console.log('Submit error: '+err);
+    });
 }
 
 }
