@@ -87,7 +87,6 @@ function submitCollected(all, sourceId) {
     for (const collected of all) {
         if (!allByKey[collected.key]) {
             allByKey[collected.key] = {
-                origin: {type: 'source'},
                 text: collected.key,
                 refs: [{filePath: collected.ref, via: collected.via}],
             };
