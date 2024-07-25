@@ -105,7 +105,7 @@ function submitCollected(all, sourceId) {
         texts: Object.values(allByKey),
     });
 
-    const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect', [], {ignoreSslError: true, allowRetries: true, maxRetries: 3});
+    const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect', [], {allowRetries: true, maxRetries: 3});
     http.post('https://voca.lingual.cloud/texts', postData).then((res) => {
         if (res.message.statusCode === httpx.HttpCodes.OK) {
             core.notice('Submitted successfully');
