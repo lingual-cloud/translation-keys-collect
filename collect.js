@@ -30,14 +30,14 @@ try {
         }
     }
 
-    console.log(all);
+    core.debug(all);
 
     if (all.length) {
-        console.log('Submitting '+all.length+' translation keys..');
+        core.info('Submitting '+all.length+' translation keys..');
         submitCollected(all, sourceId);
     }
     else {
-        console.log('Found no translatio keys in '+nrFiles+' files');
+        core.warning('Found no translatio keys in '+nrFiles+' files');
     }
 }
 catch (error) {
@@ -105,10 +105,10 @@ function submitCollected(all, sourceId) {
         texts: Object.values(allByKey),
     });
 
-    const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect');
+    const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect', [], {ignoreSslError: true, allowRetries: true, maxRetries: 3});
     http.post('https://voca.lingual.cloud/texts', postData).then((res) => {
         if (res.message.statusCode === httpx.HttpCodes.OK) {
-            console.log('Submitted successfully');
+            core.notice('Submitted successfully');
         }
         else {
             core.setFailed('Submit failed: '+res.message.statusCode);
