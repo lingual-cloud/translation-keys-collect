@@ -111,10 +111,10 @@ function submitCollected(all, sourceId) {
             console.log('Submitted successfully');
         }
         else {
-            console.log('Submit failed: '+res.message.statusCode);
+            core.setFailed('Submit failed: '+res.message.statusCode);
         }
     }).catch((err) => {
-        console.log('Submit error: '+err);
+        core.setFailed('Submit error: '+err);
     });
 }
 
