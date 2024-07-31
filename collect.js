@@ -15,7 +15,8 @@ const collectors = {
 }
 
 try {
-    const sourceId = 'f83h40hg3589/my-test-source-id'; // core.getInput('source-id', {required: true});
+    const sourceId = core.getInput('source-id', {required: true});
+    const sourceSecret = core.getInput('source-secret', {required: true});
 
     const basePath = process.cwd();
 
@@ -34,7 +35,7 @@ try {
 
     if (all.length) {
         core.info('Submitting '+all.length+' translation keys..');
-        submitCollected(all, sourceId);
+        submitCollected(all, sourceId, sourceSecret);
     }
     else {
         core.warning('Found no translatio keys in '+nrFiles+' files');
@@ -82,7 +83,7 @@ function referencePath(filePath, basePath) {
     return refPath;
 }
 
-function submitCollected(all, sourceId) {
+function submitCollected(all, sourceId, sourceSecret) {
     let allByKey = {};
     for (const collected of all) {
         if (!allByKey[collected.key]) {
@@ -100,7 +101,7 @@ function submitCollected(all, sourceId) {
     }
 
     const postData = JSON.stringify({
-        source: {id: sourceId},
+        source: {id: sourceId, secret: sourceSecret},
         texts: Object.values(allByKey),
     });
 
