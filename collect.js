@@ -38,7 +38,7 @@ try {
         submitCollected(all, sourceId, sourceSecret);
     }
     else {
-        core.warning('Found no translatio keys in '+nrFiles+' files');
+        core.warning('Found no translation keys in '+nrFiles+' files');
     }
 }
 catch (error) {

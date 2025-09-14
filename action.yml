@@ -5,6 +5,9 @@ inputs:
   source-id:
     description: Source id
     required: true
+  source-secret:
+    description: Source secret
+    required: true
   include-files:
     description: Files/dirs/extensions to scan
     required: false

@@ -19,8 +19,9 @@ jobs:
     - uses: actions/checkout@v3
     - uses: lingual-cloud/translation-keys-collect@v1
       with:
-        # Lingual project source id
+        # Lingual project source id & secret
         source-id: ${{ secrets.lingual_source_id }}
+        source-secret: ${{ secrets.lingual_source_secret }}
 ```
 
 ## License
