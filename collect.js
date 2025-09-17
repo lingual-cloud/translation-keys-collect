@@ -100,10 +100,10 @@ function submitCollected(all, sourceId, sourceSecret) {
         }
     }
 
-    const postData = JSON.stringify({
+    const postData = {
         source: {id: sourceId, secret: sourceSecret},
         texts: Object.values(allByKey),
-    });
+    };
 
     const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect', [], {allowRetries: true, maxRetries: 3});
     http.postJson('https://voca.lingual.cloud/texts', postData).then((res) => {
