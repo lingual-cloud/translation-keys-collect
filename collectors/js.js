@@ -54,6 +54,8 @@ removeSlashes: function (source) {
             result += fallback;
         }
     }
+
+    return result;
 },
 
 getUnescaped: function(sequence, code) {
