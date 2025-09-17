@@ -45,21 +45,18 @@ removeSlashes: function (source) {
 
         try {
             const unescaped = getUnescaped(sequence, code);
-
             if (!unescaped) {
                 result += fallback;
-            } else if (unescaped === true) {
-                result += getUnescapedAny(sequence, code) || fallback;
             } else {
                 result += unescaped;
             }
-        } catch (_error) {
+        } catch (e) {
             result += fallback;
         }
     }
 },
 
-getUnescapedAny: function(sequence, code) {
+getUnescaped: function(sequence, code) {
     if (code != null) {
         return String.fromCodePoint(code);
     }
