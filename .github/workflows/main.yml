@@ -1,0 +1,16 @@
+name: Test Collect Translation Keys
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: lingual-cloud/translation-keys-collect@master
+      with:
+        source-id: ${{ secrets.lingual_source_id }}
+        source-secret: ${{ secrets.lingual_source_secret }}
