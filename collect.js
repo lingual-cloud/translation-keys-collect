@@ -107,11 +107,11 @@ function submitCollected(all, sourceId, sourceSecret) {
 
     const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect', [], {allowRetries: true, maxRetries: 3});
     http.postJson('https://voca.lingual.cloud/texts', postData).then((res) => {
-        if (res.message.statusCode === httpx.HttpCodes.OK) {
+        if (res.statusCode === httpx.HttpCodes.OK) {
             core.notice('Submitted successfully');
         }
         else {
-            core.setFailed('Submit failed: '+res.message.statusCode);
+            core.setFailed('Submit failed: '+res.statusCode);
         }
     }).catch((err) => {
         core.setFailed('Submit error: '+err);
