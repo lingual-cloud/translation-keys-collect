@@ -44,12 +44,7 @@ removeSlashes: function (source) {
         }
 
         try {
-            const unescaped = getUnescaped(sequence, code);
-            if (!unescaped) {
-                result += fallback;
-            } else {
-                result += unescaped;
-            }
+            result += getUnescaped(sequence, code) || fallback;
         } catch (e) {
             result += fallback;
         }
@@ -76,10 +71,6 @@ getUnescaped: function(sequence, code) {
             return '\t';
         case '\\v':
             return '\v';
-        // Not necessary because "\\0" is interpreted as an octal escape, so the
-        // `code` argument is set.
-        // case '\\0':
-        //   return '\0';
     }
 
     return false;
