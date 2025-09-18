@@ -11,7 +11,7 @@ collectFrom: function (path, contents) {
 
     lines.resetLineNumbers();
 
-    const rxTkey = /\b(data-i18n-key|translation-key|localization-key)\s*=\s*(['"])(.+?)\2/gsu; // TODO: support custom attribute name
+    const rxTkey = /\b(data-i18n-key|translation-key|localization-key)\s*=\s*(['"])(.+?)\2/gsud; // TODO: support custom attribute name
     const matches = [...contents.matchAll(rxTkey)];
 
     return matches

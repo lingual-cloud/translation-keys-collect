@@ -14,7 +14,7 @@ collectFrom: function (path, contents) {
 
     lines.resetLineNumbers();
 
-    const rxLaravel = /\b(?:__|trans(?:_choice|late)?)\(\s*(?:\$[A-Za-z0-9_\->]+\s*\?\?\s*)*(?:(['"])(.*?)(?<!\\)\1\s*[\),])/gsu;
+    const rxLaravel = /\b(?:__|trans(?:_choice|late)?)\(\s*(?:\$[A-Za-z0-9_\->]+\s*\?\?\s*)*(?:(['"])(.*?)(?<!\\)\1\s*[\),])/gsud;
     const matches = [...contents.matchAll(rxLaravel)];
 
     return matches
