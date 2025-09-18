@@ -18,7 +18,9 @@
                             <option value="en">{{__(
                                 'English'   )}}</option>
                             <option value="fr">{{__('French')}}</option>
-                            <option value="ar">{{__('Arabic (العربية)')}}</option>
+                            <option value="ar">{{__("Arabic & mess \"\'(العربية)''\n")}}</option>
+                            <option value="xx">{{__("Multi
+                                line")}}</option>
                         </select>
                     </div>
                 </div>
@@ -33,5 +35,5 @@
     </body>
 </html>
 @php
-    echo trans('trans.php.in.blade');
+    echo trans('trans.php.in.blade with \'escaped\'\n');
 @endphp

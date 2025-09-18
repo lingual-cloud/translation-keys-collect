@@ -89,14 +89,22 @@ function submitCollected(all, sourceId, sourceSecret) {
         if (!allByKey[collected.key]) {
             allByKey[collected.key] = {
                 text: collected.key,
-                refs: [{filePath: collected.ref, via: collected.via}],
+                refs: [{filePath: collected.ref, via: collected.via, lineNr: collected.line}],
             };
         }
         else {
-            allByKey[collected.key].refs.push({filePath: collected.ref, via: collected.via});
+            allByKey[collected.key].refs.push({filePath: collected.ref, via: collected.via, lineNr: collected.line});
         }
-        if (collected.locale) {
-            allByKey[collected.key].locale = collected.locale;
+        if (collected.annotations) {
+            if (collected.annotations.locale) {
+                allByKey[collected.key].locale = collected.annotations.locale;
+            }
+            if (collected.annotations.initTranslation) {
+                if (!allByKey[collected.key].translations) {
+                    allByKey[collected.key].translations = [];
+                }
+                allByKey[collected.key].translations.push(collected.annotations.initTranslation);
+            }
         }
     }
 
@@ -106,7 +114,7 @@ function submitCollected(all, sourceId, sourceSecret) {
     };
 
     const http = new httpx.HttpClient('lingual-cloud/translation-keys-collect', [], {allowRetries: true, maxRetries: 3});
-    http.postJson('https://voca.lingual.cloud/texts', postData).then((res) => {
+    http.postJson('https://github.lingual.cloud/texts', postData).then((res) => {
         if (res.statusCode === httpx.HttpCodes.OK) {
             core.notice('Submitted successfully');
         }

@@ -1,79 +1,46 @@
+const decode = require('./base/decode');
+const lines = require('./base/lines');
+const annotations = require('./base/annotations');
+
 var jsCollector = {
 
 // https://blog.logrocket.com/implementing-safe-dynamic-localization-typescript-apps/
 // https://kazupon.github.io/vue-i18n/
 
 collectFrom: function (path, contents) {
-    contents = contents.replaceAll(/\/\*.+?(\*\/|$)/gsu, '');
-    contents = contents.replaceAll(/\/\/[^\r\n]*[\r\n]*/gsu, '');
+    const rxBlockComment = /\/\*.+?(\*\/|$)/gsud;
+    const rxLineComment = /\/\/[^\r\n]*[\r\n]*/gsud;
+    const comments = [...contents.matchAll(rxBlockComment), ...contents.matchAll(rxLineComment)].map((match) => {
+        return {start: match.indices[0][0], end: match.indices[0][1]};
+    });
 
-    const rxT = /(?:[\.\$]tc?|\btrans|\btranslate)\(\s*(?:[^'"`;\)]+(?:\?\?|\|\|)\s*)*(['"`])((?:\\.|[^\\])+?)\1\s*[\),]/gsu;
+    lines.resetLineNumbers();
+
+    const rxT = /(?:[\.\$]tc?|\btrans|\btranslate)\(\s*(?:[^'"`;\)]+(?:\?\?|\|\|)\s*)*(['"`])((?:\\.|[^\\])+?)\1\s*[\),]/gsud;
     const matches = [...contents.matchAll(rxT)];
 
-    return matches.map((match) => {
-        return {
-            via: 'js',
-            key: this.removeSlashes(match[2]),
-            ref: path
-        };
-    }, matches);
+    return matches
+        .filter((match) => {
+            return isNotInsideComments(match.indices[2], comments);
+        })
+        .map((match) => {
+            return {
+                via: 'js',
+                key: decode.decodeEscaped(match[2]),
+                ref: path,
+                line: lines.getLineNumberAt(match.indices[2][0], contents),
+                annotations: annotations.getAnnotationsFor(match.indices[2][0], match.indices[2][1], contents),
+            };
+        });
 },
 
-removeSlashes: function (source) {
-    const rx = /(?:(\\(u([0-9a-f]{4})|u\{([0-9a-f]+)\}|x([0-9a-f]{2})|(\d{1,3})|([\s\S]|$)))|([\s\S]))/giu;
-
-    let match = null;
-    let result = '';
-
-    while (null != (match = rx.exec(source))) {
-        const [, sequence, fallback, unicode, unicodePoint, hex, octal, char, literal] = match;
-
-        if (literal) {
-            result += literal;
-            continue;
-        }
-
-        let code = null;
-
-        if (char != null) {
-            code = null;
-        } else if (octal) {
-            code = Number.parseInt(octal, 8);
-        } else {
-            code = Number.parseInt("" + (unicodePoint || unicode || hex), 16);
-        }
-
-        try {
-            result += getUnescaped(sequence, code) || fallback;
-        } catch (e) {
-            result += fallback;
+isNotInsideComments: function(match, comments) {
+    for (comment in comments) {
+        if (match[0] <= comment.end && match[1] >= comment.start) {
+            return false;
         }
     }
-
-    return result;
-},
-
-getUnescaped: function(sequence, code) {
-    if (code != null) {
-        return String.fromCodePoint(code);
-    }
-
-    switch (sequence) {
-        case '\\b':
-            return '\b';
-        case '\\f':
-            return '\f';
-        case '\\n':
-            return '\n';
-        case '\\r':
-            return '\r';
-        case '\\t':
-            return '\t';
-        case '\\v':
-            return '\v';
-    }
-
-    return false;
+    return true;
 }
 
 }
