@@ -20,13 +20,13 @@ getAnnotationsFor: function(startIndex, endIndex, content) {
 },
 
 parseAnnotation: function(spec, annobj) {
-    const rxInitTranslation = /\b([a-z]{2}\-[A-Z]{2})\:(.+)/iu;
+    const rxInitTranslation = /\b([a-z]{2}-[A-Z]{2}):(.+)/iu;
     let match = spec.match(rxInitTranslation);
     if (match) {
         annobj.initTranslation = { locale: match[1], text: match[2] };
     }
 
-    const rxLocale = /\b\[([a-z]{2}\-[A-Z]{2}|id)\]\b/iu;
+    const rxLocale = /\b\[([a-z]{2}-[A-Z]{2}|id)\]\b/iu;
     match = spec.match(rxLocale);
     if (match) {
         annobj.locale = match[1] === 'id' ? '-id-' : match[1];
