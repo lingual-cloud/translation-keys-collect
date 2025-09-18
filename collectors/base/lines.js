@@ -10,7 +10,8 @@ resetLineNumbers: function() {
 
 getLineNumberAt: function(index, content) {
     let lineNr = this.lastLineNr;
-    for (let c = this.lastLineNrIndex; c < index; c++) {
+    let c = this.lastLineNrIndex;
+    for ( ; c < index; c++) {
         if (content[c] === '\r' || content[c] === '\n') {
             lineNr++;
             if (content[c] === '\r' && c+1 < index && content[c+1] === '\n') c++;
