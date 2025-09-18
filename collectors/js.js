@@ -35,8 +35,8 @@ collectFrom: function (path, contents) {
 },
 
 isNotInsideComments: function(match, comments) {
-    for (comment in comments) {
-        if (match[0] <= comment.end && match[1] >= comment.start) {
+    for (let i = 0; i < comments.length; i++) {
+        if (match[0] <= comments[i].end && match[1] >= comments[i].start) {
             return false;
         }
     }
