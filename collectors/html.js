@@ -16,7 +16,7 @@ collectFrom: function (path, contents) {
 
     return matches
         .filter((match) => {
-            return isNotInsideComments(match.indices[3], comments);
+            return this.isNotInsideComments(match.indices[3], comments);
         })
         .map((match) => {
             return {
