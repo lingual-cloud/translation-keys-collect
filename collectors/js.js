@@ -1,5 +1,6 @@
 const decode = require('./base/decode');
 const lines = require('./base/lines');
+const comments = require('./base/comments');
 const annotations = require('./base/annotations');
 
 var jsCollector = {
@@ -10,9 +11,7 @@ var jsCollector = {
 collectFrom: function (path, contents) {
     const rxBlockComment = /\/\*.+?(\*\/|$)/gsud;
     const rxLineComment = /\/\/[^\r\n]*[\r\n]*/gsud;
-    const comments = [...contents.matchAll(rxBlockComment), ...contents.matchAll(rxLineComment)].map((match) => {
-        return {start: match.indices[0][0], end: match.indices[0][1]};
-    });
+    comments.init([rxBlockComment], [rxLineComment]);
 
     lines.resetLineNumbers();
 
@@ -21,7 +20,7 @@ collectFrom: function (path, contents) {
 
     return matches
         .filter((match) => {
-            return this.isNotInsideComments(match.indices[2], comments);
+            return !comments.isInside(match.indices[2]);
         })
         .map((match) => {
             return {
@@ -33,15 +32,6 @@ collectFrom: function (path, contents) {
             };
         });
 },
-
-isNotInsideComments: function(match, comments) {
-    for (let i = 0; i < comments.length; i++) {
-        if (match[0] <= comments[i].end && match[1] >= comments[i].start) {
-            return false;
-        }
-    }
-    return true;
-}
 
 }
 

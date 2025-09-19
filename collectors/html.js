@@ -1,13 +1,12 @@
 const lines = require('./base/lines');
+const comments = require('./base/comments');
 const annotations = require('./base/annotations');
 
 var htmlCollector = {
 
 collectFrom: function (path, contents) {
     const rxLineComment = /<!--.+?-->/gsud;
-    const comments = [...contents.matchAll(rxLineComment)].map((match) => {
-        return {start: match.indices[0][0], end: match.indices[0][1]};
-    });
+    comments.init([], [rxLineComment]);
 
     lines.resetLineNumbers();
 
@@ -16,7 +15,7 @@ collectFrom: function (path, contents) {
 
     return matches
         .filter((match) => {
-            return this.isNotInsideComments(match.indices[3], comments);
+            return !comments.isInside(match.indices[3]);
         })
         .map((match) => {
             return {
@@ -28,15 +27,6 @@ collectFrom: function (path, contents) {
             };
         });
 },
-
-isNotInsideComments: function(match, comments) {
-    for (let i = 0; i < comments.length; i++) {
-        if (match[0] <= comments[i].end && match[1] >= comments[i].start) {
-            return false;
-        }
-    }
-    return true;
-}
 
 //
 // TODO: support special chars that can occur in html attributes (e.g. htmlspecialchars)
