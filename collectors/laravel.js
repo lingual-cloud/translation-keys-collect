@@ -26,7 +26,7 @@ collectFrom: function (path, contents) {
                 key: match[2],
                 ref: path,
                 line: lines.getLineNumberAt(match.indices[2][0], contents),
-                annotations: annotations.getAnnotationsFor(match.indices[2][0], match.indices[2][1], contents),
+                annotations: annotations.getAnnotationsFor(match.indices[2][0], match.indices[2][1], contents, comments),
             };
         });
 },
