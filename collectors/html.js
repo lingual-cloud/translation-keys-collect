@@ -5,8 +5,9 @@ const annotations = require('./base/annotations');
 var htmlCollector = {
 
 collectFrom: function (path, contents) {
-    const rxLineComment = /<!--.+?-->/gsud;
-    comments.init(contents, [], [rxLineComment]);
+    const rxBlockComment = /<!--.+?-->/gsud;
+    const rxEndOfComment = /-+>/ud;
+    comments.init(contents, [rxBlockComment], [], rxEndOfComment);
 
     lines.resetLineNumbers();
 

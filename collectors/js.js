@@ -11,7 +11,8 @@ var jsCollector = {
 collectFrom: function (path, contents) {
     const rxBlockComment = /\/\*.+?(\*\/|$)/gsud;
     const rxLineComment = /\/\/[^\r\n]*[\r\n]*/gsud;
-    comments.init(contents, [rxBlockComment], [rxLineComment]);
+    const rxEndOfComment = /\*+\//ud;
+    comments.init(contents, [rxBlockComment], [rxLineComment], rxEndOfComment);
 
     lines.resetLineNumbers();
 

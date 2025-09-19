@@ -5,10 +5,11 @@ const comments = require('./base/comments');
 var laravelCollector = {
 
 collectFrom: function (path, contents) {
-    const rxBlockComment = /\/\*.+?(\*\/|$)/gsud;
-    const rxBladeComment = /\{\{--.+?(--\}\}|$)/gsud; // TODO: blade-only?
+    const rxBlockComment = /\/\*.+?(?:\*\/|$)/gsud;
+    const rxBladeComment = /\{\{--.+?(?:--\}\}|$)/gsud; // TODO: blade-only? (see also rxEndOfComment below)
     const rxLineComment = /\/\/[^\r\n]*[\r\n]*/gsud;
-    comments.init(contents, [rxBlockComment, rxBladeComment], [rxLineComment]);
+    const rxEndOfComment = /\*+\/|-+\}\}/ud;
+    comments.init(contents, [rxBlockComment, rxBladeComment], [rxLineComment], rxEndOfComment);
 
     lines.resetLineNumbers();
 

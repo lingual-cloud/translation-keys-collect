@@ -2,8 +2,10 @@ var comments = {
 
 blockComments: [],
 lineComments: [],
+rxEndOfComment: '',
 
-init: function(content, rxsBlock, rxsLine) {
+init: function(content, rxsBlock, rxsLine, rxEndOfComment) {
+    this.rxEndOfComment = rxEndOfComment;
     this.blockComments = [];
     this.lineComments = [];
     for (r = 0; r < rxsBlock.length; r++) {
@@ -20,17 +22,23 @@ init: function(content, rxsBlock, rxsLine) {
 
 isInside: function(match) {
     for (let i = 0; i < this.blockComments.length; i++) {
-        if (match[0] <= this.blockComments[i].end && match[1] >= this.blockComments[i].start) {
+        if ((match[0] > this.blockComments[i].start && match[0] < this.blockComments[i].end)
+            || (match[1] > this.blockComments[i].start && match[1] < this.blockComments[i].end)) {
             return true;
         }
     }
     for (let i = 0; i < this.lineComments.length; i++) {
-        if ((match[0] >= this.lineComments[i].start && match[0] <= this.lineComments[i].end)
-            || (match[1] >= this.lineComments[i].start && match[1] <= this.lineComments[i].end)) {
+        if ((match[0] > this.lineComments[i].start && match[0] < this.lineComments[i].end)
+            || (match[1] > this.lineComments[i].start && match[1] < this.lineComments[i].end)) {
             return true;
         }
     }
     return false;
+},
+
+getEndOfCommentRegex: function(full) {
+    return full ? this.rxEndOfComment
+        : ('' + this.rxEndOfComment).replaceAll(/^\/|\/[a-z]+$/gu, '');
 }
 
 }

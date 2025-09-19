@@ -2,19 +2,19 @@ const lines = require('./lines');
 
 var annotations = {
 
-getAnnotationsFor: function(startIndex, endIndex, content) {
+getAnnotationsFor: function(startIndex, endIndex, content, comments) {
     const priorLine = lines.getPriorLine(startIndex, content);
     const restOfLine = lines.getRestOfLine(endIndex, content);
 
-    const rxLingual = /@lingual(.+?)(?:$|\*\/)/ium;
-
+    const rxLingual = new RegExp('/@lingual(.+?)(?:'+comments.getEndOfCommentRegex(false)+')/iumd');
+    
     const match = priorLine.match(rxLingual);
     const match2 = restOfLine.match(rxLingual);
 
     let annotations = {};
 
-    if (match) annotations = this.parseAnnotation(match[1], annotations);
-    if (match2) annotations = this.parseAnnotation(match2[1], annotations);
+    if (match && comments.isInside(match.indices[1])) annotations = this.parseAnnotation(match[1], annotations);
+    if (match2 && comments.isInside(match2.indices[1])) annotations = this.parseAnnotation(match2[1], annotations);
 
     return annotations;
 },
