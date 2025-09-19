@@ -6,7 +6,7 @@ var htmlCollector = {
 
 collectFrom: function (path, contents) {
     const rxLineComment = /<!--.+?-->/gsud;
-    comments.init([], [rxLineComment]);
+    comments.init(contents, [], [rxLineComment]);
 
     lines.resetLineNumbers();
 

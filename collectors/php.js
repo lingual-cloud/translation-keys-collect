@@ -9,7 +9,7 @@ var phpCollector = {
 collectFrom: function (path, contents) {
     const rxBlockComment = /\/\*.+?(\*\/|$)/gsud;
     const rxLineComment = /\/\/[^\r\n]*[\r\n]*/gsud;
-    comments.init([rxBlockComment], [rxLineComment]);
+    comments.init(contents, [rxBlockComment], [rxLineComment]);
 
     lines.resetLineNumbers();
 

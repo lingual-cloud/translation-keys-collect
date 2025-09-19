@@ -8,7 +8,7 @@ collectFrom: function (path, contents) {
     const rxBlockComment = /\/\*.+?(\*\/|$)/gsud;
     const rxBladeComment = /\{\{--.+?(--\}\}|$)/gsud; // TODO: blade-only?
     const rxLineComment = /\/\/[^\r\n]*[\r\n]*/gsud;
-    comments.init([rxBlockComment, rxBladeComment], [rxLineComment]);
+    comments.init(contents, [rxBlockComment, rxBladeComment], [rxLineComment]);
 
     lines.resetLineNumbers();
 
