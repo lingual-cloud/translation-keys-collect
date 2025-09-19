@@ -7,12 +7,12 @@ init: function(content, rxsBlock, rxsLine) {
     this.blockComments = [];
     this.lineComments = [];
     for (r = 0; r < rxsBlock.length; r++) {
-        this.blockComments = [...this.blockComments, ...content.matchAll(rxsBlock[r]).map((match) => {
+        this.blockComments = [...this.blockComments, ...[...content.matchAll(rxsBlock[r])].map((match) => {
             return {start: match.indices[0][0], end: match.indices[0][1]};
         })];
     }
     for (r = 0; r < rxsLine.length; r++) {
-        this.lineComments = [...this.lineComments, ...content.matchAll(rxsLine[r]).map((match) => {
+        this.lineComments = [...this.lineComments, ...[...content.matchAll(rxsLine[r])].map((match) => {
             return {start: match.indices[0][0], end: match.indices[0][1]};
         })];
     }
